@@ -11,7 +11,7 @@ const removeColumnButton = document.querySelector('.remove-column');
 appendRowButton.addEventListener('click', () => {
   const rows = tbody.querySelectorAll('tr');
   const newRow = document.createElement('tr');
-  let numColumns = 4;
+  let numColumns = 2;
 
   if (rows.length > 0) {
     numColumns = rows[0].cells.length;
