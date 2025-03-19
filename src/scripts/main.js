@@ -2,15 +2,23 @@
 
 // write code here
 const field = document.querySelector('.field');
+const tbody = field.querySelector('tbody');
 const appendRowButton = document.querySelector('.append-row');
 const removeRowButton = document.querySelector('.remove-row');
+const appendColumnButton = document.querySelector('.append-column');
+const removeColumnButton = document.querySelector('.remove-column');
 
 appendRowButton.addEventListener('click', () => {
-  const tbody = field.querySelector('tbody');
   const rows = tbody.querySelectorAll('tr');
   const newRow = document.createElement('tr');
 
-  for (let i = 1; i <= 4; i++) {
+  let numColumns = 4;
+
+  if (rows.length > 0) {
+    numColumns = rows[0].cells.length;
+  }
+
+  for (let i = 1; i <= numColumns; i++) {
     const cell = document.createElement('td');
 
     newRow.appendChild(cell);
@@ -20,17 +28,10 @@ appendRowButton.addEventListener('click', () => {
     tbody.appendChild(newRow);
   }
 
-  const updatedRows = tbody.querySelectorAll('tr');
-
-  if (updatedRows.length >= 10) {
-    appendRowButton.disabled = true;
-  } else {
-    appendRowButton.disabled = false;
-  }
+  updateButtonStates();
 });
 
 removeRowButton.addEventListener('click', () => {
-  const tbody = field.querySelector('tbody');
   const rows = tbody.querySelectorAll('tr');
 
   if (rows.length > 2) {
@@ -39,11 +40,46 @@ removeRowButton.addEventListener('click', () => {
     firstRow.remove();
   }
 
-  const updatedRows = tbody.querySelectorAll('tr');
-
-  if (updatedRows.length <= 2) {
-    removeRowButton.disabled = true;
-  } else {
-    removeRowButton.disabled = false;
-  }
+  updateButtonStates();
 });
+
+appendColumnButton.addEventListener('click', () => {
+  const rows = tbody.querySelectorAll('tr');
+
+  rows.forEach((row) => {
+    const newCell = document.createElement('td');
+
+    if (rows.length < 10) {
+      row.appendChild(newCell);
+    }
+
+    updateButtonStates();
+  });
+});
+
+removeColumnButton.addEventListener('click', () => {
+  const rows = tbody.querySelectorAll('tr');
+
+  if (rows.length > 2) {
+    rows.forEach((row) => {
+      row.deleteCell(0);
+    });
+  }
+
+  updateButtonStates();
+});
+
+function updateButtonStates() {
+  const rows = tbody.querySelectorAll('tr');
+  let numColumns = 0;
+
+  if (rows.length > 0) {
+    numColumns = rows[0].cells.length;
+  }
+
+  appendRowButton.disabled = rows.length >= 10;
+  removeRowButton.disabled = rows.length <= 2;
+
+  appendColumnButton.disabled = numColumns >= 10;
+  removeColumnButton.disabled = numColumns <= 2;
+}
